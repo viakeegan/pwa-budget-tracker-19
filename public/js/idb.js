@@ -51,3 +51,43 @@ function uploadTransaction() {
 
     // get all records from store and set to a variable
     const getAll = budgetObjectStore.getAll();
+
+    getAll.onsuccess = function() {
+        
+        // if there was data in indexedDb' store send it to the api server
+        if (getAll.result.length > 0) {
+            fetch('/api/transaction', {
+                method: 'POST',
+                body: JSON.stringify(getAll.result),
+                headers: {
+                    Accept: 'application/json, text/plain, */*',
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(serverResponse => {
+                if (serverResponse.message) {
+                    throw new Error
+                    (serverResponse);
+                }
+
+                // open one more transaction
+                const transaction = db.transaction(['new_transaction'],'readwrite');
+
+                // access the new_transaction object store
+                const budgetObjectStore = transaction.objectStore('new_transaction');
+
+                // clear all items in your store
+                budgetObjectStore.clear();
+
+                alert('All saved transactions have been submitted.');
+            })
+            .catch(err => {
+                console.log(err);
+            });
+        }
+    }
+}
+
+// listen for app coming back online
+window.addEventListener('online', uploadTransaction);
