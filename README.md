@@ -16,7 +16,7 @@ WHEN the user reestablishes an internet connection<br />
 THEN the deposits or expenses added while they were offline are added to their transaction history and their totals are updated<br />
 
 ## Screenshots
-![](./images/screenshot.PNG)
+![](./images/Screenshot.PNG)
 
 ## Usage
 [Deployed application](https://pwa-budget-tracker-19-app.herokuapp.com/)
